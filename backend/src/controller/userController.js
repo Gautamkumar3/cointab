@@ -38,36 +38,38 @@ const deleteAllUsers = async (req, res) => {
 // ############ get all users from database ############
 
 const getAllUsers = async (req, res) => {
+  const { page = 1, limit = 10, q = "" } = req.query;
+  console.log(req.query);
   let query = {};
-  if (req.body.gender == "female") {
+  if (q == "female") {
     query = { gender: "female" };
-  } else if (req.body.gender == "male") {
+  } else if (q == "male") {
     query = { gender: "male" };
-  } else if (req.body.age == "lessthanfifty") {
-    query = { "dob.age": { $lt: 50 } };
-  } else if (req.body.age == "greterthanequaltofifty") {
+  } else if (q == "lessthanthirty") {
+    query = { "dob.age": { $lt: 30 } };
+  } else if (q == "greterthanequaltothirty") {
     query = { "dob.age": { $gte: 50 } };
-  } else if (req.body.country == "India") {
+  } else if (q == "India") {
     query = { "location.country": "India" };
-  } else if (req.body.country == "New Zealand") {
+  } else if (q == "New Zealand") {
     query = { "location.country": "New Zealand" };
-  } else if (req.body.country == "Iran") {
+  } else if (q == "Iran") {
     query = { "location.country": "Iran" };
   }
-    try {
-      const totalUsers = await userModel.find(query).count();
-      const filteredUser = await userModel
-        .find(query)
-        .skip(req.params.page)
-        .limit(10);
-      res.status(200).send({
-        status: "success",
-        users_count: totalUsers,
-        data: filteredUser,
-      });
-    } catch (er) {
-      res.status(403).send({ status: "error", msg: er.message });
-    }
+  try {
+    const totalUsers = await userModel.find(query).count();
+    const filteredUser = await userModel
+      .find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.status(200).send({
+      status: "success",
+      users_count: totalUsers,
+      data: filteredUser,
+    });
+  } catch (er) {
+    res.status(403).send({ status: "error", msg: er.message });
+  }
 };
 
 module.exports = { addUser, deleteAllUsers, getAllUsers };
