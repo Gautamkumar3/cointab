@@ -44,7 +44,7 @@ const Home = () => {
     } else {
       setLoading(true);
       await axios
-        .post("http://localhost:8000/user")
+        .post("https://cointab-api.onrender.com/user")
         .then((res) => {
           setLoading(false);
           return handleToast(
@@ -73,7 +73,7 @@ const Home = () => {
       setDeleteLoading(true);
       setTimeout(() => {
         axios
-          .delete("http://localhost:8000/user")
+          .delete("https://cointab-api.onrender.com/user")
           .then((res) => {
             setDeleteLoading(false);
             return handleToast(

@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const dbConnect = async () => {
-  return mongoose.connect(
-    "mongodb+srv://gautam:gautam@cointab.hrx5xwe.mongodb.net/cointab"
-  );
+  return mongoose.connect(`${process.env.URL}/cointab`);
 };
 
 module.exports = dbConnect;

@@ -4,7 +4,9 @@ const dbConnect = require("./config/db");
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 const userRouter = require("./route/userRoute");
-const PORT = 8000;
+require("dotenv").config();
+
+const PORT = process.env.PORT || 8000;
 
 const app = express();
 app.use(cors());

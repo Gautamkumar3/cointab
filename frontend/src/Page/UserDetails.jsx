@@ -19,11 +19,12 @@ import {
 import axios from "axios";
 import UserTable from "../Component/UserTable";
 import Pagination from "../Component/Pagination";
+import { Link } from "react-router-dom";
 
 const getUser = async (page, limit, q = "") => {
   console.log(q);
   let res = await axios.get(
-    `http://localhost:8000/user?page=${page}&limit=${limit}&q=${q}`
+    `https://cointab-api.onrender.com/user?page=${page}&limit=${limit}&q=${q}`
   );
   return res.data;
 };
@@ -48,6 +49,15 @@ const UserDetails = () => {
   const handleFilter = (value) => {
     setQuery(value);
     getUser(page, limit, value).then((res) => {
+      setData(res.data);
+      setCount(res.users_count);
+      setLoading(false);
+    });
+  };
+
+  const handleReset = () => {
+    setLoading(true);
+    getUser(page, limit).then((res) => {
       setData(res.data);
       setCount(res.users_count);
       setLoading(false);
@@ -116,9 +126,19 @@ const UserDetails = () => {
             <option value="New Zealand">New Zealand</option>
             <option value="Iran">Iran</option>
           </Select>
+          <Button colorScheme={"blue"} w="200px" my={1} onClick={handleReset}>
+            Reset
+          </Button>
+          <Link to={"/"}>
+            <Button colorScheme={"whatsapp"} w="200px" my={5}>
+              Go to home page
+            </Button>
+          </Link>
         </Box>
         {data.length == 0 ? (
-          <Heading>No user found</Heading>
+          <Heading textAlign={"center"} w="80vw" mt={"10%"}>
+            No user found
+          </Heading>
         ) : (
           <TableContainer>
             <Table variant="striped">
@@ -143,7 +163,7 @@ const UserDetails = () => {
                     Age
                   </Th>
                   <Th fontSize={"20px"} color="#fff">
-                    Location
+                    Country
                   </Th>
                 </Tr>
               </Thead>
