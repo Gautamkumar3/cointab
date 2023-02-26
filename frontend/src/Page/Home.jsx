@@ -10,41 +10,82 @@ import {
 import axios from "axios";
 import { color } from "framer-motion";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const toast = useToast();
 
-  const handleFetchUser = () => {
+  // ######## function for toast ###########
+
+  function handleToast(title, description, status) {
+    toast({
+      title: title,
+      description: description,
+      status: status,
+      duration: 4000,
+      isClosable: true,
+      position: "top",
+    });
+  }
+
+  // ############# Fetch user ####################
+
+  const handleFetchUser = async () => {
     if (loading) {
-      toast({
-        title: "error",
-        description: "Data fetching is in process please wait for some time",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
+      return handleToast(
+        "error",
+        "Users data fetching is in progress please wait for some time",
+        "error"
+      );
     } else {
       setLoading(true);
-      axios
+      await axios
         .post("http://localhost:8000/user")
         .then((res) => {
-          toast({
-            title: "success",
-            description: "Data fetched successfully.",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-            position: "top",
-          });
           setLoading(false);
+          return handleToast(
+            "success",
+            "Users data fetched successfully",
+            "success"
+          );
         })
         .catch((er) => {
           setError(true);
         });
+    }
+  };
+
+  // ############# Delete all users #######################
+
+  const handleDelete = async () => {
+    console.log(deleteLoading);
+    if (deleteLoading) {
+      return handleToast(
+        "error",
+        "Users is still deleting from database please wait for some time",
+        "error"
+      );
+    } else {
+      setDeleteLoading(true);
+      setTimeout(() => {
+        axios
+          .delete("http://localhost:8000/user")
+          .then((res) => {
+            setDeleteLoading(false);
+            return handleToast(
+              "success",
+              "Users deleted successfully",
+              "success"
+            );
+          })
+          .catch((er) => {
+            setError(true);
+          });
+      }, 2000);
     }
   };
 
@@ -54,6 +95,13 @@ const Home = () => {
       {loading ? (
         <Text color={"green"} fontSize="25px">
           Data Fetching....
+        </Text>
+      ) : (
+        ""
+      )}
+      {deleteLoading ? (
+        <Text color={"red"} fontSize="25px">
+          Data deleting....
         </Text>
       ) : (
         ""
@@ -72,9 +120,10 @@ const Home = () => {
               color: "green",
             }}
           >
-            Fetch User
+            Fetch Users
           </Button>
           <Button
+            onClick={handleDelete}
             colorScheme={"whatsapp"}
             p={8}
             fontSize="25px"
@@ -85,21 +134,23 @@ const Home = () => {
               color: "green",
             }}
           >
-            Delete User
+            Delete Users
           </Button>
-          <Button
-            p={8}
-            fontSize="25px"
-            colorScheme={"whatsapp"}
-            border="2px"
-            _hover={{
-              background: "#fff",
-              border: "2px solid green",
-              color: "green",
-            }}
-          >
-            User Details
-          </Button>
+          <Link to="user_details">
+            <Button
+              p={8}
+              fontSize="25px"
+              colorScheme={"whatsapp"}
+              border="2px"
+              _hover={{
+                background: "#fff",
+                border: "2px solid green",
+                color: "green",
+              }}
+            >
+              User Details
+            </Button>
+          </Link>
         </HStack>
       </Flex>
     </Box>
