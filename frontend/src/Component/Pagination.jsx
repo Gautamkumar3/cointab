@@ -14,7 +14,27 @@ const Pagination = ({ total, page, setPage }) => {
     </Button>
   ));
 
-  return pages;
+  return (
+    <>
+      <Button
+        colorScheme={"whatsapp"}
+        m={1}
+        isDisabled={page === 1}
+        onClick={() => setPage(page - 1)}
+      >
+        Prev
+      </Button>
+      {pages}
+      <Button
+        colorScheme={"whatsapp"}
+        m={1}
+        isDisabled={page === total}
+        onClick={() => setPage(page + 1)}
+      >
+        Next
+      </Button>
+    </>
+  );
 };
 
 export default Pagination;

@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 const getUser = async (page, limit, q = "") => {
   console.log(q);
   let res = await axios.get(
-    `https://cointab-api.onrender.com/user?page=${page}&limit=${limit}&q=${q}`
+    `http://localhost:8080/user?page=${page}&limit=${limit}&q=${q}`
   );
   return res.data;
 };
@@ -49,6 +49,7 @@ const UserDetails = () => {
   const handleFilter = (value) => {
     setQuery(value);
     getUser(page, limit, value).then((res) => {
+      console.log(res);
       setData(res.data);
       setCount(res.users_count);
       setLoading(false);
@@ -75,7 +76,7 @@ const UserDetails = () => {
 
   return (
     <>
-      <Flex>
+      <Flex w="95vw">
         <Box width={"16%"}>
           <Heading color="whatsapp.500" fontSize={"25px"} my={5}>
             Total User : {count}
@@ -140,51 +141,53 @@ const UserDetails = () => {
             No user found
           </Heading>
         ) : (
-          <TableContainer>
-            <Table variant="striped">
-              <Thead background="tomato" h="12vh">
-                <Tr>
-                  <Th fontSize={"20px"} color="#fff">
-                    Profile
-                  </Th>
-                  <Th fontSize={"20px"} color="#fff">
-                    Name
-                  </Th>
-                  <Th fontSize={"20px"} color="#fff">
-                    Email
-                  </Th>
-                  <Th fontSize={"20px"} color="#fff">
-                    Phone
-                  </Th>
-                  <Th fontSize={"20px"} color="#fff">
-                    Gender
-                  </Th>
-                  <Th fontSize={"20px"} color="#fff">
-                    Age
-                  </Th>
-                  <Th fontSize={"20px"} color="#fff">
-                    Country
-                  </Th>
-                </Tr>
-              </Thead>
-              {loading ? (
-                <Box ml={"150%"} mt="50%">
-                  <Spinner
-                    thickness="10px"
-                    speed="0.65s"
-                    emptyColor="gray.200"
-                    color="blue.500"
-                    width={"200px"}
-                    h="200px"
-                  />
-                </Box>
-              ) : (
-                <Tbody>
-                  <UserTable data={data} />
-                </Tbody>
-              )}
-            </Table>
-          </TableContainer>
+          <Box>
+            <TableContainer w="fit-content">
+              <Table variant="striped">
+                <Thead background="tomato" h="12vh">
+                  <Tr>
+                    <Th fontSize={"20px"} color="#fff">
+                      Profile
+                    </Th>
+                    <Th fontSize={"20px"} color="#fff">
+                      Name
+                    </Th>
+                    <Th fontSize={"20px"} color="#fff">
+                      Email
+                    </Th>
+                    <Th fontSize={"20px"} color="#fff">
+                      Phone
+                    </Th>
+                    <Th fontSize={"20px"} color="#fff">
+                      Gender
+                    </Th>
+                    <Th fontSize={"20px"} color="#fff">
+                      Age
+                    </Th>
+                    <Th fontSize={"20px"} color="#fff">
+                      Country
+                    </Th>
+                  </Tr>
+                </Thead>
+                {loading ? (
+                  <Box ml={"150%"} mt="50%">
+                    <Spinner
+                      thickness="10px"
+                      speed="0.65s"
+                      emptyColor="gray.200"
+                      color="blue.500"
+                      width={"200px"}
+                      h="200px"
+                    />
+                  </Box>
+                ) : (
+                  <Tbody>
+                    <UserTable data={data} />
+                  </Tbody>
+                )}
+              </Table>
+            </TableContainer>
+          </Box>
         )}
       </Flex>
       {!loading ? (
