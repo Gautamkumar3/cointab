@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 const getUser = async (page, limit, q = "") => {
   console.log(q);
   let res = await axios.get(
-    `http://localhost:8080/user?page=${page}&limit=${limit}&q=${q}`
+    `https://cointab-api.onrender.com/user?page=${page}&limit=${limit}&q=${q}`
   );
   return res.data;
 };

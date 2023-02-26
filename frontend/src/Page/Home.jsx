@@ -12,6 +12,13 @@ import { color } from "framer-motion";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
+const getUser = async (page, limit, q = "") => {
+  let res = await axios.get(
+    `https://cointab-api.onrender.com/user?page=${page}&limit=${limit}&q=${q}`
+  );
+  return res.data;
+};
+
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -62,7 +69,11 @@ const Home = () => {
   // ############# Delete all users #######################
 
   const handleDelete = async () => {
-    console.log(deleteLoading);
+    let allData = await getUser(1, 5);
+    if (allData.users_count === 0) {
+      return handleToast("error", "Databse is empty no user found", "error");
+    }
+    
     if (deleteLoading) {
       return handleToast(
         "error",
